@@ -51,10 +51,9 @@ bash -l -c "$ (curl -sfL https://raw.githubusercontent.com/bitrise-tools/codesig
 Получение #### Фастлан
 Fastlane позволяет вам создавать брелки и создавать приложения.
 
- - [Пример Fastlane] (https://github.com/tarappo/ci-sample-ios/blob/master/fastlane/Fastfile)
+ - [Пример Fastlane](https://github.com/tarappo/ci-sample-ios/blob/master/fastlane/Fastfile)
 
-
-`` `
+```
 lane: setup_certificate сделать
   keychain_name = "ios-build.keychain"
   keychain_password = SecureRandom.base64
@@ -75,29 +74,29 @@ lane: setup_certificate сделать
       keychain_password: keychain_password
   )
 конец
-`` `
-[Цитата от официального представителя Travis CI] (https://docs.travis-ci.com/user/common-build-problems/#Mac%3A-macOS-Sierra- (10.12) -Code-Signing-Errors)
+```
+[Цитата от официального представителя Travis CI](https://docs.travis-ci.com/user/common-build-problems/#Mac%3A-macOS-Sierra-(10.12)-Code-Signing-Errors)
 
 #### Установка переменных среды
- - KEY_PASSWORD
-   - Установить набор фразы при выводе файла p12
- - GYM_CODE_SIGNING_IDENTITY
-   - идентификация подписи кода
-   - Пример) Распространение iPhone: xxxxxx
+- KEY_PASSWORD
+  - Установить набор фразы при выводе файла p12
+- GYM_CODE_SIGNING_IDENTITY
+  - идентификация подписи кода
+  - Пример) Распространение iPhone: xxxxxx
 
 Приготовление ####. Travis.yml
 После подготовки всего вышеподготовьте `.travis.yml`.
 
-Подробности описаны в [.travis.yml] (https://github.com/tarappo/ci-sample-ios/blob/master/.travis.yml), но некоторые из них подбирают и объясняют Встать.
+Подробности описаны в [.travis.yml](https://github.com/tarappo/ci-sample-ios/blob/master/.travis.yml), но некоторые из них подбирают и объясняют Встать.
 
 После декомпрессии сделайте настройки вокруг keychain с помощью fastlane, а затем установите профиль Provisioning Profile в определенном месте.
 
-`` `
+```
 before_script:
   - bundle exec fastlane setup_certificate
   - mkdir -p ~ / Library / MobileDevice / Provisioning \ Profiles
   - cp ./travis/*mobileprovision ~ / Library / MobileDevice / Provisioning \ Profiles /
-`` `
+```
 
 После этого все нормально, если вы создадите приложение.
 
@@ -106,12 +105,12 @@ before_script:
 
 #### Настройка из Интернета
 
-![Экран настройки NEVERCODE] (img / nevercode-setting.png)
+![Экран настройки NEVERCODE](img/nevercode-setting.png)
 
 Вы можете загрузить файл p12 и профиль Provisioning Profile из «Подписи кодов» на экране настроек.
 
 ### buddybuild
 #### Настройка из Интернета
-! [setup setup setup] (img / buddybuild-setting.png)
+![setup setup setup](img/buddybuild-setting.png)
 
 Вы можете загрузить файл p12 и профиль Provisioning Profile из «Подписи кода» на экране настроек.
