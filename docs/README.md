@@ -2,11 +2,11 @@
 Каждая функция указана ниже.
 
 ## Cloud CI
-- (1) [Битрейт] (./services/bitrise.md)
-- (2) [CircleCI] (./services/circleci.md)
-- (3) [Тревис CI] (./services/travisci.md)
-- (4) [NEVERCODE] (./services/nevercode.md)
-- (5) [buddybuild] (./services/buddybuild.md)
+- (1) [Битрейт](./services/bitrise.md)
+- (2) [CircleCI](./services/circleci.md)
+- (3) [Тревис CI](./services/travisci.md)
+- (4) [NEVERCODE](./services/nevercode.md)
+- (5) [buddybuild](./services/buddybuild.md)
  
  ### Сравнение характеристик и т. Д.
 
