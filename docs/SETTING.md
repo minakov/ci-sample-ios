@@ -1,116 +1,117 @@
-# 各CIの初期設定
-以下の各クラウドCIに関して、アプリをビルドできるようにするためのp12ファイルとProvisioning Profileの初期設定の仕方について明記しています。
+# Исходная настройка каждого CI
+Для каждого из следующих облачных CI он указывает, как инициализировать файл p12 и профиль Provisioning Profile, чтобы вы могли создавать приложение.
 
-## 前提作業
-各CIにおいて、以下の作業を簡単にやってくれるか、1から自前でやるかの違いがあります。
+# Предварительная работа
+Для каждого CI существует разница в том, легко ли вы выполняете следующую работу или выполняете ли вы это самостоятельно.
 
- - iOSアプリをビルドする上では、p12ファイルとProvisioning Profileが無ければいけません。
- - p12ファイルはkeychainに登録する必要があります。
- - Provisioning Profileは特定の場所にある必要があります。
+- При создании приложения iOS вам необходимо иметь файл p12 и профиль Provisioning Profile.
+- файл p12 должен быть зарегистрирован в цепочке ключей.
+- Профиль предоставления должен находиться в определенном месте.
 
+### Битрейт
 
-### Bitrise
-#### Webからの設定
-![Bitrise設定画面](img/bitrise-setting.png)
+#### Настройка из Интернета
+![Настройки установки битрейта](img/bitrise-setting.png)
 
-必要なp12ファイルと、Provisioning Profileを上記の設定画面上にアップロードすればOKです。
-ファイルがわからない場合は、以下のコマンドで必要なファイルを取得してくれるので、取得したファイルをアップロードすればOKです。
+Вы можете загрузить требуемый файл p12 и профиль Provisioning Profile на экран настроек выше.
+Если вы не знаете файл, вы можете получить необходимые файлы с помощью приведенной ниже команды, поэтому загрузка полученного файла в порядке.
 
 ```
-bash -l -c "$(curl -sfL https://raw.githubusercontent.com/bitrise-tools/codesigndoc/master/_scripts/install_wrap.sh)"
+bash -l -c "$ (curl -sfL https://raw.githubusercontent.com/bitrise-tools/codesigndoc/master/_scripts/install_wrap.sh)"
 ```
-
 
 ### CircleCI
-#### Webからの設定
-![CircleCI設定画面](img/circleci-setting-list.png)
 
-設定画面の「Code Signing」からp12ファイルとProvisioning ProfileをアップロードすればOKです。
+#### Настройка из Интернета
+![Экран настройки CircleCI](img/circleci-setting-list.png)
 
+Вы можете загрузить файл p12 и профиль Provisioning Profile из «Подписи кодов» на экране настроек.
 
 ### Travis CI
-Travis CIではWebページから設定をすることはできず、自身でファイルを管理する＆自らコマンドを叩く必要があります。
+В Travis CI вы не можете делать настройки с веб-страниц, вам нужно сами управлять файлами и сами ударять по команде.
 
-#### 事前準備
-事前におこなう準備は以下のとおりです。
+#### предварительная подготовка
+Предварительные приготовления заключаются в следующем.
 
- 1. travisコマンドのインストール
-   - `gem install travis --no-document`
-   - `travis login`
-   - `travis enable`
- 1. p12ファイルとProvisioning Profileを用意
-   - p12ファイルはパスフレーズ設定をしておく 
- 1. 1で用意したファイルをtar
-   - `tar cvf secrets.tar dist.p12 sample.mobileprovision`
- 1. できたtarファイルを暗号化する
-   - `travis encrypt-file secrets.tar secrets.tar.enc`
-   - 実行後に表示される文字列をコピペしておく
-     - 例) `openssl aes-256-cbc -K $encrypted_xxxxx_key -iv $encrypted_xxxxx_iv -in ./travis/secrets.tar.enc -out ./travis/secrets.tar -d`
-     - $encrypted\_xxxxx\_keyの値は設定済みになっています
- 1. 暗号化したファイルはgithub上で管理する
+1. Установите команду travis
+  - `gem install travis - no - document`
+  - `travis login`
+  - `travis enable`
+1. Подготовьте файл p12 и профиль Provisioning Profile
+  - Установить парольную фразу для файла p12
+1. Скопируйте файл, подготовленный в 1 в tar
+  - `tar cvf secrets.tar dist.p12 sample.mobileprovision`
+1. Зашифровать полученный tar-файл
+  - `travis encrypt-file secrets.tar secrets.tar.enc`
+  - Скопировать строку символов, отображаемую после выполнения
+    - Пример: `openssl aes-256-cbc -K $ encrypted_xxxxx_key -iv $ encrypted_xxxxx_iv -in ./travis/secrets.tar.enc -out./travis/secrets.tar -d`
+    - Значение ключа $ encrypted \ _ xxx x x \ _ уже установлено
+ 1. Зашифрованные файлы управляются на github
 
-#### Fastlaneの用意
-keychainの設定やアプリのビルドなどはFastlaneに任せてしまいます。
+Получение #### Фастлан
+Fastlane позволяет вам создавать брелки и создавать приложения.
 
- - [Fastlaneの例](https://github.com/tarappo/ci-sample-ios/blob/master/fastlane/Fastfile)
+ - [Пример Fastlane] (https://github.com/tarappo/ci-sample-ios/blob/master/fastlane/Fastfile)
 
 
-```
-lane :setup_certificate do
-  keychain_name = "ios-build.keychain"
-  keychain_password = SecureRandom.base64
+`` `
+lane: setup_certificate сделать
+  keychain_name = "ios-build.keychain"
+  keychain_password = SecureRandom.base64
 
-  create_keychain(
-      name: keychain_name,
-      password: keychain_password,
-      default_keychain: true,
-      unlock: true,
-      timeout: 3600,
-      add_to_search_list: true
-  )
+  create_keychain (
+      имя: keychain_name,
+      пароль: keychain_password,
+      default_keychain: true,
+      unlock: true,
+      таймаут: 3600,
+      add_to_search_list: true
+  )
 
-  import_certificate(
-      certificate_path: "travis/dist.p12",
-      certificate_password: ENV["KEY_PASSWORD"],
-      keychain_name: keychain_name,
-      keychain_password: keychain_password
-  )
-end
-```
-[Travis CIの公式からの引用](https://docs.travis-ci.com/user/common-build-problems/#Mac%3A-macOS-Sierra-(10.12)-Code-Signing-Errors)
+  import_certificate (
+      certificate_path: "travis / dist.p12",
+      certificate_password: ENV ["KEY_PASSWORD"],
+      keychain_name: keychain_name,
+      keychain_password: keychain_password
+  )
+конец
+`` `
+[Цитата от официального представителя Travis CI] (https://docs.travis-ci.com/user/common-build-problems/#Mac%3A-macOS-Sierra- (10.12) -Code-Signing-Errors)
 
-#### 環境変数の設定
- - KEY_PASSWORD
-   - p12ファイル出力時に設定したパスフレーズ
- - GYM_CODE_SIGNING_IDENTITY
-   - code-signing identity
-   - 例) iPhone Distribution: xxxxxx
+#### Установка переменных среды
+ - KEY_PASSWORD
+   - Установить набор фразы при выводе файла p12
+ - GYM_CODE_SIGNING_IDENTITY
+   - идентификация подписи кода
+   - Пример) Распространение iPhone: xxxxxx
 
-#### .travis.ymlの用意
-上記、全ての準備が終わったら、`.travis.yml`を用意します。
+Приготовление ####. Travis.yml
+После подготовки всего вышеподготовьте `.travis.yml`.
 
-詳細は、以下の[.travis.yml](https://github.com/tarappo/ci-sample-ios/blob/master/.travis.yml)に書いてありますが一部ピックアップして説明しておきます。
+Подробности описаны в [.travis.yml] (https://github.com/tarappo/ci-sample-ios/blob/master/.travis.yml), но некоторые из них подбирают и объясняют Встать.
 
-解凍後、keychain周りの設定をfastlaneでおこない、その後Provisioning Profileを特定の場所に置きます。
+После декомпрессии сделайте настройки вокруг keychain с помощью fastlane, а затем установите профиль Provisioning Profile в определенном месте.
 
-```
+`` `
 before_script:
-  - bundle exec fastlane setup_certificate
-  - mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
-  - cp ./travis/*mobileprovision ~/Library/MobileDevice/Provisioning\ Profiles/
-```
+  - bundle exec fastlane setup_certificate
+  - mkdir -p ~ / Library / MobileDevice / Provisioning \ Profiles
+  - cp ./travis/*mobileprovision ~ / Library / MobileDevice / Provisioning \ Profiles /
+`` `
 
-あとはアプリのビルドなりをすればOKです。
+После этого все нормально, если вы создадите приложение.
 
 
 ### NEVERCODE
-#### Webからの設定
-![NEVERCODE設定画面](img/nevercode-setting.png)
 
-設定画面の「Code Signing」からp12ファイルとProvisioning ProfileをアップロードすればOKです。
+#### Настройка из Интернета
+
+![Экран настройки NEVERCODE] (img / nevercode-setting.png)
+
+Вы можете загрузить файл p12 и профиль Provisioning Profile из «Подписи кодов» на экране настроек.
 
 ### buddybuild
-#### Webからの設定
-![buddybuild設定画面](img/buddybuild-setting.png)
+#### Настройка из Интернета
+! [setup setup setup] (img / buddybuild-setting.png)
 
-設定画面の「Code signing」からp12ファイルとProvisioning ProfileをアップロードすればOKです。
+Вы можете загрузить файл p12 и профиль Provisioning Profile из «Подписи кода» на экране настроек.
